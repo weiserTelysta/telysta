@@ -1,35 +1,86 @@
 @import './base.css';
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+/* 全局重置 */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* 更好的盒模型管理 */
+}
+
+/* body 基本样式 */
+body {
+  background: #fff;
+  color: #555;
+  font-size: 14px;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  line-height: 1.6; /* 提升可读性 */
+}
+
+/* 表格 */
+table {
+  border-collapse: collapse;
+}
+
+/* 标题 */
+h1, h2, h3, h4, h5, h6 {
   font-weight: normal;
+  font-size: 100%; /* 默认字体大小 */
 }
 
-a,
-.green {
+/* 链接 */
+a {
+  color: #555;
   text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
 }
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
+a:hover {
+  text-decoration: underline;
 }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
+/* 图片 */
+img {
+  border: none;
+}
 
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
+/* 无序列表 */
+ol, ul, li {
+  list-style: none;
+}
+
+/* 输入框和按钮 */
+input, textarea, select, button {
+  font: 14px Verdana, Helvetica, Arial, sans-serif;
+}
+
+/* 清除浮动 */
+.clearfix::after {
+  content: "";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+
+.clearfix {
+  zoom: 1; /* 为老旧浏览器兼容 */
+}
+
+/* 强制滚动条（如果需要） */
+html {
+  overflow-y: scroll;
+}
+
+img {
+  user-select: none;   /* 标准属性 */
+  -webkit-user-select: none;  /* Safari/Chrome */
+  -moz-user-select: none;     /* Firefox */
+  -ms-user-select: none;      /* IE10+ */
+  pointer-events: none;       /* 可选：禁用点击事件 */
+}
+
+/* 针对 Firefox 的额外保护 */
+img::selection {
+  background: transparent;
 }

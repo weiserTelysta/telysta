@@ -1,9 +1,15 @@
-<script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
+<template>
+  <div class="backcontainer">
+    <HomeBackground/>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import HomeBackground from '@/components/HomeView/HomeBackground.vue';
+
+
 </script>
 
-<template>
-  <main>
-    <TheWelcome />
-  </main>
-</template>
+<style lang="scss" scoped>
+
+</style>
