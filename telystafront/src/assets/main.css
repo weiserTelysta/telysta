@@ -72,15 +72,3 @@ html {
   overflow-y: scroll;
 }
 
-img {
-  user-select: none;   /* 标准属性 */
-  -webkit-user-select: none;  /* Safari/Chrome */
-  -moz-user-select: none;     /* Firefox */
-  -ms-user-select: none;      /* IE10+ */
-  pointer-events: none;       /* 可选：禁用点击事件 */
-}
-
-/* 针对 Firefox 的额外保护 */
-img::selection {
-  background: transparent;
-}

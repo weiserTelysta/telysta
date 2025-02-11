@@ -1,12 +1,29 @@
-img {
-    user-select: none;   /* 标准属性 */
-    -webkit-user-select: none;  /* Safari/Chrome */
-    -moz-user-select: none;     /* Firefox */
-    -ms-user-select: none;      /* IE10+ */
-    pointer-events: none;       /* 可选：禁用点击事件 */
-  }
-  
-  /* 针对 Firefox 的额外保护 */
-  img::selection {
-    background: transparent;
-  }
+/* fonts */
+.miss-fajardose-regular {
+  font-family: "Miss Fajardose", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel&display=swap');
+
+.cinzel-fonts {
+  font-family: "Cinzel";
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'TrajanPro';
+  src: url('@/assets/fonts/TrajanPro-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'TrajanPro';
+  src: url('@/assets/fonts/TrajanPro-Bold.otf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}

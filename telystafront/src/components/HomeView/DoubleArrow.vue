@@ -79,7 +79,7 @@ const handleClick = () => {
             }
 
             50% {
-                opacity: 0.5;
+                opacity: 0.3;
             }
 
             100% {
