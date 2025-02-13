@@ -7,29 +7,45 @@ from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from  django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
+
+from .models import User
 from .serializers import UserLoginSerializer,UserRegistrationSerializer
+
+from .utils.tokens import ActivationTokenManager
 
 
 # Create your views here.
 class RegisterView(APIView):
-    permission_classes = (AllowAny,)
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         serializer = UserRegistrationSerializer(data=request.data)
         if serializer.is_valid():
-            user = serializer.save()
-            return Response({
-                "uid":str(user.id),
-                "username":user.username,
-                "email":user.email,
-            },status=status.HTTP_201_CREATED)
-
+            serializer.save()
+            return Response({"message": "注册成功，请查收激活邮件！"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ActivateUserView(APIView):
+    def get(self,request,token):
+        token_data = ActivationTokenManager.validate_token(token)
+        if not token_data:
+            return Response({"error": "无效或过期的激活链接"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try :
+            user  = User.objects.get(uid=token_data['uid'],email=token_data['email'])
+
+            if not user.is_active:
+                user.is_active = True
+                user.save()
+                return Response({"message":"账号激活成功"},status=status.HTTP_200_OK)
+            return Response({"message":"账号已经激活"},status=status.HTTP_400_BAD_REQUEST)
+        except User.DoesNotExist:
+            return Response({"error":"用户不存在"},status.HTTP_404_NOT_FOUND)
+
 
 class LoginView(APIView):
     permission_classes = (AllowAny,)
 
     def post(self, request, *args, **kwargs):
-        serializer = UserRegistrationSerializer(data=request.data)
+        serializer = UserLoginSerializer(data=request.data)
 
         if serializer.is_valid():
             user = serializer.validated_data['user']

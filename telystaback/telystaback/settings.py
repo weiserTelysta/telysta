@@ -13,6 +13,13 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 
+import os
+import environ
+env = environ.Env()
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+environ.Env.read_env(os.path.join(BASE_DIR, '.env.development'))
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,7 +33,7 @@ SECRET_KEY = 'django-insecure-=40=7=4dnb8yzh$s=4l7@a=&!oit2#%#r8d+c+(b*&tl!@$@))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "telysta.com"]
 
 AUTH_USER_MODEL = 'telystaauth.User'
 
@@ -106,11 +113,11 @@ WSGI_APPLICATION = 'telystaback.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'telystaweb',     # 数据库名
-        'USER': 'root',            # 数据库用户
-        'PASSWORD': 'telysta',  # 用户密码
+        'NAME': env.str("DB_NAME"),     # 数据库名
+        'USER': env.str("DB_USER"),           # 数据库用户
+        'PASSWORD': env.str("DB_PASSWORD"),  # 用户密码
         'HOST': 'localhost',          # 如果是远程数据库，填写IP或域名
-        'PORT': '3306',               # 默认端口
+        'PORT': env.str("DB_PORT"),              # 默认端口
         'OPTIONS': {
             'charset': 'utf8mb4',     # 确保与数据库字符集一致
         }
@@ -157,3 +164,35 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# EMAIL
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.qq.com'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+EMAIL_USE_TLS = False
+
+EMAIL_HOST_USER = env.str("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env.str("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# redis
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "SOCKET_CONNECT_TIMEOUT": 300,# 秒
+            "SOCKET_TIMEOUT": 300, # 秒
+            "IGNORE_EXCEPTIONS": True,
+        },
+        "KEY_PREFIX": "telysta"
+    }
+}
+
+ACTIVATION_TOKEN_EXPIRE = 3600*24
+
+# 启用 HTTPS 安全设置
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = not DEBUG

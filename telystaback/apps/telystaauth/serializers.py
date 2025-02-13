@@ -1,6 +1,10 @@
+from django.core.mail import send_mail
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
+from .utils.tokens import ActivationTokenManager
+
+from telystaback import settings
 
 User = get_user_model()
 
@@ -22,10 +26,32 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """创建用户"""
-        validated_data['password'] = make_password(validated_data['password'])
-        return User.objects.create(**validated_data)
+        user = User.objects.create(
+            email=validated_data['email'],
+            username=validated_data['username']
+        )
+        user.set_password(validated_data['password'])  # Hash 密码
+        user.is_active = False
+        user.save()
 
-        return attrs
+        token = ActivationTokenManager.generate_activation_token(user)
+        self.send_activation_email(user,token)
+
+        return user
+
+    def send_activation_email(self, user,token):
+        """ 发送用户激活邮件 """
+        subject = "请激活你的账号"
+        activation_link = f"http://your-frontend.com/activate/{token}"  # 假设前端处理激活
+        message = f"你好 {user.username}，\n\n请点击以下链接激活你的账号：\n{activation_link}\n\n谢谢！"
+
+        send_mail(
+            subject,  # 主题
+            message,  # 内容
+            settings.DEFAULT_FROM_EMAIL,  # 发送者
+            [user.email],  # 接收者
+            fail_silently=False,
+        )
 
 
 class UserLoginSerializer(serializers.Serializer):
