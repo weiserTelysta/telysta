@@ -20,9 +20,6 @@ env = environ.Env()
 BASE_DIR = Path(__file__).resolve().parent.parent
 environ.Env.read_env(os.path.join(BASE_DIR, '.env.development'))
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -33,7 +30,10 @@ SECRET_KEY = 'django-insecure-=40=7=4dnb8yzh$s=4l7@a=&!oit2#%#r8d+c+(b*&tl!@$@))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "telysta.com"]
+DOMAIN = env.str('DOMAIN')
+
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
+
 
 AUTH_USER_MODEL = 'telystaauth.User'
 
@@ -78,11 +78,16 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 # JWT配置
 SIMPLE_JWT = {
+    # 把主键改为uid
+    'USER_ID_FIELD': 'uid',
+    'USER_ID_CLAIM': 'user_uid',
+
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
     'AUTH_HEADER_TYPES': ('Bearer',),
+
 }
 
 ROOT_URLCONF = 'telystaback.urls'
@@ -167,7 +172,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # EMAIL
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.qq.com'
+EMAIL_HOST = 'smtp.exmail.qq.com'
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
 EMAIL_USE_TLS = False

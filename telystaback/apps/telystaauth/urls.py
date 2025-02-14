@@ -9,4 +9,5 @@ urlpatterns = [
     path('register/', views.RegisterView.as_view(), name='register'),
     path('refresh/', views.RefreshTokenView.as_view(), name='refresh'),
     path('activate/<str:token>/', views.ActivateUserView.as_view(), name='activate'),
+    path('resent_activate/', views.ResentActivationView.as_view(), name='resent_activate'),
 ]

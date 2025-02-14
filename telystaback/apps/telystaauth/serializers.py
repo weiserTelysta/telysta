@@ -1,7 +1,12 @@
+from smtplib import SMTPException
+
 from django.core.mail import send_mail
+from django.urls import reverse
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
+from rest_framework.response import Response
+
 from .utils.tokens import ActivationTokenManager
 
 from telystaback import settings
@@ -32,27 +37,48 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         )
         user.set_password(validated_data['password'])  # Hash 密码
         user.is_active = False
-        user.save()
 
         token = ActivationTokenManager.generate_activation_token(user)
+        print("Generated token:", token)
+        user.save()
+        print("User created:", user)
         self.send_activation_email(user,token)
 
         return user
 
     def send_activation_email(self, user,token):
         """ 发送用户激活邮件 """
-        subject = "请激活你的账号"
-        activation_link = f"http://your-frontend.com/activate/{token}"  # 假设前端处理激活
-        message = f"你好 {user.username}，\n\n请点击以下链接激活你的账号：\n{activation_link}\n\n谢谢！"
+        try:
+            subject = "请激活你的账号"
+            activation_url = reverse('telystaauth:activate', args=[token])
+            activation_link = f"http://{settings.DOMAIN}{activation_url}"
+            message = f"你好 {user.username}，\n\n请点击以下链接激活你的账号：\n{activation_link}\n\n谢谢！"
 
-        send_mail(
-            subject,  # 主题
-            message,  # 内容
-            settings.DEFAULT_FROM_EMAIL,  # 发送者
-            [user.email],  # 接收者
-            fail_silently=False,
-        )
+            send_mail(
+                subject,  # 主题
+                message,  # 内容
+                settings.DEFAULT_FROM_EMAIL,  # 发送者
+                [user.email],  # 接收者
+                fail_silently=False,
+            )
+        except SMTPException as e:
+            raise serializers.ValidationError("邮件发送失败")
+        except Exception as e:
+            raise serializers.ValidationError(f"邮件发送失败，错误信息：{str(e)}")
 
+    # def resent_activation_email(self, user,token):
+    #     self.send_activation_email(self, user, token)
+
+class ResentActivationSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True,error_messages={"required":"请输入邮箱！"})
+
+    def validate_email(self, value):
+        try:
+            user = User.objects.get(email=value,is_active=False)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("该邮箱未注册或已激活。")
+
+        return value
 
 class UserLoginSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True, error_messages={"required":"请输入邮箱！"})
@@ -65,7 +91,6 @@ class UserLoginSerializer(serializers.Serializer):
         if email and password:
             try:
                 user = User.objects.get(email=email)
-                # user = User.objects.filter(email=email).first()
             except User.DoesNotExist:
                 raise serializers.ValidationError("用户不存在。")
             except User.MultipleObjectsReturned:
