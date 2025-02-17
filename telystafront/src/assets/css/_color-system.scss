@@ -1,0 +1,54 @@
+// _color-system.scss
+@use 'sass:color';
+@use 'sass:map';
+
+// ===== 基础色板 =====
+$color-primary: #BF364F !default;
+$color-secondary: #6D466B !default;
+
+$color-thirdary: #8C4653 !default;
+
+$color-accent: #D94848 !default;
+$color-light: #F2F2F2 !default;
+$color-dark: #262626 !default;
+
+
+
+// ===== 衍生色生成 =====
+$color-primary-light: color.adjust($color-primary, $lightness: 15%);
+$color-primary-dark: color.adjust($color-primary, $lightness: -10%);
+$color-primary-alpha: color.change($color-primary, $alpha: 0.2);
+
+$color-secondary-alpha: color.change($color-secondary, $alpha: 0.3);
+
+
+
+// 功能色
+$color-alert: #FB5349; 
+$color-accent: #D94848 !default;        // 强调色（错误/警告）
+$color-success: #28a745 !default;       // 成功状态
+$color-warning: #ffc107 !default;       // 警告状态
+$color-info: #17a2b8 !default;          // 信息提示
+$color-bg-aliceblue: aliceblue; 
+
+// 中性色阶梯
+$color-neutral: (
+  "0": #FFFFFF,
+  "50": #F8F9FA,
+  "100": #E9ECEF,
+  "200": #DEE2E6,
+  "300": #CED4DA,
+  "400": #ADB5BD,
+  "500": #6C757D,
+  "600": #495057,
+  "700": #343A40,
+  "800": #212529,
+  "900": #000000,
+  "alice": aliceblue
+);
+
+// ===== 文字色 =====
+$text-colors-primary: map.get($color-neutral, "800");
+$text-colors-secondary: map.get($color-neutral, "600");
+$text-colors-muted: map.get($color-neutral, "500");
+$text-colors-light: map.get($color-neutral, "50");

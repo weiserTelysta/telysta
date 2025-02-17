@@ -1,3 +1,5 @@
+@use "./color-system" as *;
+
 /* fonts */
 .miss-fajardose-regular {
   font-family: "Miss Fajardose", serif;
@@ -26,4 +28,11 @@
   src: url('@/assets/fonts/TrajanPro-Bold.otf') format('truetype');
   font-weight: bold;
   font-style: normal;
+}
+.firstcontainer{
+  display: flex;
+  justify-content: center;
+}
+.secondcontainer{
+  width: 1200px;
 }

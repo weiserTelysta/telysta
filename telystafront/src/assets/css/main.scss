@@ -1,4 +1,4 @@
-@import './base.css';
+@use './base' as *; 
 
 /* 全局重置 */
 *,
@@ -72,3 +72,6 @@ html {
   overflow-y: scroll;
 }
 
+nav{
+    font-family: 'Source Han Sans', sans-serif;
+}
