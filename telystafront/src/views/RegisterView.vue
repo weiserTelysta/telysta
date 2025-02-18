@@ -44,7 +44,7 @@
                         <span v-if="!loading">立即注册</span>
                         <div v-else class="loader"></div>
                     </button>
-                    
+
                     <div class="form-footer">
                         <router-link to="/login">已有账号，登录</router-link>
                     </div>
@@ -83,9 +83,9 @@ const form = reactive({
 // const passwordError = ref(false)
 
 // 错误验证
-const emailError = computed(() => !/\S+@\S+\.\S+/.test(form.email))
-const usernameError = computed(()=> (form.username.length < 3 && form.username.length > 20))
-const passwordError = computed(()=>form.password.length < 8 && form.password.length > 20)
+const emailError = computed(() => !/\S+@\S+\.\S+/.test(form.email) && form.email != '')
+const usernameError = computed(()=> (form.username.length < 3 || form.username.length > 20) && form.username != '');
+const passwordError = computed(()=> (form.password.length < 8 || form.password.length > 20) && form.password != '');
 const passwordMatch = computed(() => form.password === form.confirmpassword)
 
 
@@ -96,7 +96,7 @@ const formValid = computed(() =>
     form.password.length >= 8 &&
     form.password.length < 20 &&
     passwordMatch.value
-)
+);
 // 错误接口
 interface ErrorResponse {
     email?: string[];  // 后端可能返回的邮箱错误字段
@@ -112,13 +112,13 @@ function isAxiosError(error: unknown): error is CustomAxiosError {
 
 // 注册按钮
 const handleSubmit = async () => {
-    if (!formValid.value) return
+    if (!formValid.value) return;
 
     try {
         loading.value = true;
 
         const response = await authHttp.register(form.email, form.username, form.password);
-        console.log('注册成功', response)
+        console.log('注册成功', response);
         emailsent.value = true;
         // router.push({ name: 'login', query: { registered: 'true' } })
     } catch (error) {
@@ -217,6 +217,10 @@ watch(form, (newValue, oldValue) => {
                 color: rgba(255 255 255 / 0.6);
             }
         }
+
+        .error-msg{
+            color:color.adjust($color-error, $lightness: +10%);
+        }
     }
 
     .submit-btn {
@@ -265,6 +269,7 @@ watch(form, (newValue, oldValue) => {
 
     }
 }
+
 
 @keyframes spin {
     to {
