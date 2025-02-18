@@ -25,14 +25,16 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env.development'))
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-=40=7=4dnb8yzh$s=4l7@a=&!oit2#%#r8d+c+(b*&tl!@$@))'
+SECRET_KEY = env.str('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool('DEBUG', default=True)  # 默认为 True
+
 
 DOMAIN = env.str('DOMAIN')
 
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
+
 
 
 AUTH_USER_MODEL = 'telystaauth.User'
@@ -121,7 +123,7 @@ DATABASES = {
         'NAME': env.str("DB_NAME"),     # 数据库名
         'USER': env.str("DB_USER"),           # 数据库用户
         'PASSWORD': env.str("DB_PASSWORD"),  # 用户密码
-        'HOST': 'localhost',          # 如果是远程数据库，填写IP或域名
+        'HOST': env.str("DB_HOST"),          # 如果是远程数据库，填写IP或域名
         'PORT': env.str("DB_PORT"),              # 默认端口
         'OPTIONS': {
             'charset': 'utf8mb4',     # 确保与数据库字符集一致
@@ -185,16 +187,17 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
+        "LOCATION": env.str("CACHE_URL", "redis://127.0.0.1:6379/1"),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            "SOCKET_CONNECT_TIMEOUT": 300,# 秒
-            "SOCKET_TIMEOUT": 300, # 秒
+            "SOCKET_CONNECT_TIMEOUT": 300,  # 秒
+            "SOCKET_TIMEOUT": 300,  # 秒
             "IGNORE_EXCEPTIONS": True,
         },
         "KEY_PREFIX": "telysta"
     }
 }
+
 
 ACTIVATION_TOKEN_EXPIRE = 3600*24
 
