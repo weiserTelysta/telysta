@@ -41,12 +41,13 @@ class RegisterView(APIView):
 
 class ActivateUserView(APIView):
     def get(self,request,token):
-        token_data = ActivationTokenManager.validate_activation_token(token)
-
-        if not token_data:
-            return Response({"error": "无效或过期的激活链接"}, status=status.HTTP_400_BAD_REQUEST)
 
         try :
+            token_data = ActivationTokenManager.validate_activation_token(token)
+
+            if not token_data:
+                return Response({"error": "无效或过期的激活链接"}, status=status.HTTP_400_BAD_REQUEST)
+
             user  = User.objects.get(uid=token_data['uid'],email=token_data['email'])
 
             if not user.is_active:
@@ -56,6 +57,8 @@ class ActivateUserView(APIView):
             return Response({"message":"账号已经激活"},status=status.HTTP_400_BAD_REQUEST)
         except User.DoesNotExist:
             return Response({"error":"用户不存在"},status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error":str(e)},status=status.HTTP_400_BAD_REQUEST)
 
 class ResentActivationView(APIView):
     permission_classes = (AllowAny,)

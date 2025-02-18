@@ -14,8 +14,8 @@ from telystaback import settings
 User = get_user_model()
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, min_length=8, max_length=20, error_messages={
-        "min_length": "密码长度需要大于8个字符。",
+    password = serializers.CharField(write_only=True, min_length=6, max_length=20, error_messages={
+        "min_length": "密码长度需要大于6个字符。",
         "max_length": "密码长度需要小于20个字符。"
     })
 
@@ -35,7 +35,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             username=validated_data['username']
         )
-        user.set_password(validated_data['password'])  # Hash 密码
+        user.set_password(validated_data['password'])
         user.is_active = False
 
         token = ActivationTokenManager.generate_activation_token(user)
@@ -51,7 +51,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         try:
             subject = "请激活你的账号"
             activation_url = reverse('telystaauth:activate', args=[token])
-            activation_link = f"http://{settings.DOMAIN}{activation_url}"
+            domain = settings.DOMAIN.rstrip('/')
+            activation_link = f"http://{domain}{activation_url}"
+
             message = f"你好 {user.username}，\n\n请点击以下链接激活你的账号：\n{activation_link}\n\n谢谢！"
 
             send_mail(
@@ -82,7 +84,11 @@ class ResentActivationSerializer(serializers.Serializer):
 
 class UserLoginSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True, error_messages={"required":"请输入邮箱！"})
-    password = serializers.CharField(max_length=20, min_length=6,write_only=True)
+    password = serializers.CharField(
+        style={'input_type': 'password'},
+        trim_whitespace=False,
+        write_only=True
+    )
 
     def validate(self, attrs):
         email = attrs.get('email')
