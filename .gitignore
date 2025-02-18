@@ -1,1 +1,2 @@
 /telystadjango/.venv/
+.env.local
