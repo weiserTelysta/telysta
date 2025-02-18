@@ -20,7 +20,7 @@ services:
       retries: 5
 
   backend:
-    build: ./backend
+    build: ./telystaback
     container_name: telysta_backend
     environment:
       - DB_NAME=${DB_NAME}
@@ -47,7 +47,7 @@ services:
              gunicorn --bind 0.0.0.0:8000 --workers 4 telystaback.wsgi:application"
 
   frontend:
-    build: ./frontend
+    build: ./telystafront
     container_name: telysta_frontend
     ports:
       - "80:80"
