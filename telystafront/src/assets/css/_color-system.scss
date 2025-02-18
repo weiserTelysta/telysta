@@ -1,37 +1,42 @@
-// _color-system.scss
 @use 'sass:color';
 @use 'sass:map';
 
 // ===== 基础色板 =====
-$color-primary: #BF364F !default;
-$color-secondary: #6D466B !default;
+$color-primary: #BF364F;
+$color-secondary: #6D466B;
+$color-tertiary: #8C4653;
+$color-accent: #D94848;
+$color-light: #F2F2F2;
+$color-dark: #262626;
 
-$color-thirdary: #8C4653 !default;
-
-$color-accent: #D94848 !default;
-$color-light: #F2F2F2 !default;
-$color-dark: #262626 !default;
-
-
-
-// ===== 衍生色生成 =====
-$color-primary-light: color.adjust($color-primary, $lightness: 15%);
-$color-primary-dark: color.adjust($color-primary, $lightness: -10%);
-$color-primary-alpha: color.change($color-primary, $alpha: 0.2);
-
-$color-secondary-alpha: color.change($color-secondary, $alpha: 0.3);
-
-
-
-// 功能色
-$color-alert: #FB5349; 
-$color-accent: #D94848 !default;        // 强调色（错误/警告）
-$color-success: #28a745 !default;       // 成功状态
-$color-warning: #ffc107 !default;       // 警告状态
-$color-info: #17a2b8 !default;          // 信息提示
+// ===== 功能色优化 =====
+$color-error: #FB5349; 
+$color-success: #28a745;
+$color-warning: #ffc107;
+$color-info: #17a2b8;
 $color-bg-aliceblue: aliceblue; 
 
-// 中性色阶梯
+// ===== 衍生色生成 =====
+// ===== 自动生成衍生色 =====
+@function create-derivative($base, $lightness: 0%, $alpha: 1) {
+  @return color.change(
+    color.adjust($base, $lightness: $lightness),
+    $alpha: $alpha
+  );
+}
+
+// 主色衍生
+$color-primary-light: create-derivative($color-primary, 15%);
+$color-primary-dark: create-derivative($color-primary, -10%);
+$color-primary-alpha: create-derivative($color-primary, 0%, 0.2);
+
+// 次级色衍生
+$color-secondary-light: create-derivative($color-secondary, 15%);
+$color-secondary-dark: create-derivative($color-secondary, -10%);
+$color-secondary-alpha: create-derivative($color-secondary, 0%, 0.3);
+
+
+// ===== 中性色阶梯 =====
 $color-neutral: (
   "0": #FFFFFF,
   "50": #F8F9FA,
@@ -44,7 +49,6 @@ $color-neutral: (
   "700": #343A40,
   "800": #212529,
   "900": #000000,
-  "alice": aliceblue
 );
 
 // ===== 文字色 =====

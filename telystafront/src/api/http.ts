@@ -1,15 +1,17 @@
 import axios from 'axios'
 
 const service = axios.create({
-    baseURL:"localhost:8000",
+    baseURL:"http://127.0.0.1:8000/api",
     timeout:10000
 });
 
 service.interceptors.request.use(
     config => {
-        const token = localStorage.getItem('token');
-        if(token){
-            config.headers.Authorization = 'Bearer ${token}';
+        if (config.url && !config.url.includes('/auth/')) {
+            const token = localStorage.getItem('token');
+            if (token) {
+                config.headers.Authorization = `Bearer ${token}`;
+            }
         }
         return config;
     },

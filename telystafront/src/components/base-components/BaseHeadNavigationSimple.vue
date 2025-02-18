@@ -4,9 +4,6 @@
             <div class="right">
                 <h1 @click="goToHome">telysta</h1>
             </div>
-            <div class="left">
-                <HeadNavBtn class="login" @click="goToLogin">登录</HeadNavBtn>
-            </div>
         </nav>
     </div>
 
@@ -18,9 +15,6 @@ import HeadNavBtn from './button/HeadNavBtn.vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-const goToLogin = () => {
-    router.push({ name: 'login' });
-};
 const goToHome = () => {
     router.push({ name: 'home' });
 }
@@ -31,10 +25,16 @@ const goToHome = () => {
 @import "@/assets/css/color-system";
 
 .firstcontainer {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    left: 0;
+    background: linear-gradient(to right,$color-primary-alpha,transparent,transparent,transparent);
+
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: map.get($color-neutral, "0");
+
 
     nav {
         height: 60px;
@@ -49,12 +49,12 @@ const goToHome = () => {
             font-family: Cinzel;
             font-size: 30px;
             font-weight: 600;
-            color: $color-primary;
+            color: $color-light;
             cursor: pointer;
             transition: all .2s ease;
 
             &:hover {
-                color: $color-primary-light;
+                color: $color-secondary-light;
 
             }
         }

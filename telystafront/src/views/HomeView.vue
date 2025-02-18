@@ -1,8 +1,7 @@
 <template>
+      <BaseHeadNavigation v-show="backgroundIsopenStore.isOpen"></BaseHeadNavigation>
   <div class="container-window">
-    <div class="container-navigation firstcontainer" v-show="backgroundIsopenStore.isOpen">
-      <BaseHeadNavigation></BaseHeadNavigation>
-    </div>
+    
     <div class="container-back">
       <HomeBackground />
     </div>
@@ -35,11 +34,6 @@ const backgroundIsopenStore = useBackgroundIsopenStore();
   overflow: hidden;
 }
 
-.container-navigation{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
 .container-body {
   flex: 1;
