@@ -22,15 +22,8 @@ services:
   backend:
     build: ./telystaback
     container_name: telysta_backend
-    environment:
-      - DB_NAME=${DB_NAME}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_PORT=3306
-      - EMAIL_HOST_USER=${EMAIL_HOST_USER}
-      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
-      - SECRET_KEY=${SECRET_KEY}
-      - DEBUG=${DEBUG}
+    env_file:
+      - .env.production  # 加载环境变量文件
     depends_on:
       db:
         condition: service_healthy
@@ -49,12 +42,12 @@ services:
   frontend:
     build: ./telystafront
     container_name: telysta_frontend
+    env_file:
+      - .env.production  # 加载环境变量文件
     ports:
       - "80:80"
     networks:
       - telysta_network
-    environment:
-      - VUE_APP_API_URL=${VUE_APP_API_URL}
     depends_on:
       - backend
 
