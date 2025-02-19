@@ -10,7 +10,7 @@ services:
     volumes:
       - ./volumes/redis:/data
     networks:
-      - telsytaweb
+      - telystaweb
   db:
     image: "mysql"
     container_name: "db"
@@ -32,7 +32,7 @@ services:
     volumes:
       - ./volumes/db/data:/var/lib/mysql
     networks:
-      - telsytaweb
+      - telystaweb
     depends_on:
       redis:
         condition: service_healthy
@@ -45,7 +45,7 @@ services:
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost"]
     networks:
-      - telsytaweb
+      - telystaweb
   telystaback:
     build: ./telystaback
     restart: always
@@ -65,5 +65,5 @@ services:
       db:
         condition: service_healthy
 networks:
-  telsytaweb:
+  telystaweb:
     driver: "bridge"
