@@ -11,7 +11,7 @@ RUN pip install --upgrade pip -i https://pypi.tuna.tsinghua.edu.cn/simple --time
 
 
 COPY requirements.txt .
-RUN pip install --user -r requirements.txt
+RUN pip install --user -r requirements.txt --timeout=300 -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 # 阶段2：运行环境
 FROM builder
