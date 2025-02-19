@@ -46,6 +46,9 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost"]
     networks:
       - telystaweb
+    depends_on:
+      telystaback:
+        condition: service_healthy
   telystaback:
     build: ./telystaback
     restart: always
