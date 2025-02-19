@@ -9,7 +9,7 @@ WORKDIR /www/web
 
 COPY package*.json ./
 RUN npm ci
-COPY ./telystafront/ .
+COPY . .
 RUN npm run build
 
 
