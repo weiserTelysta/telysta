@@ -1,3 +1,4 @@
 /telystadjango/.venv/
 .env.local
 .env
+.env.development
