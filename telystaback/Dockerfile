@@ -1,7 +1,7 @@
 # telystaback/Dockfile
 # 使用多阶段构建
 # 阶段1：构建环境
-FROM python:3.10 as builder
+FROM python:3.10 AS builder
 
 WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE 1
