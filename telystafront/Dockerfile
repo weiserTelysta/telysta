@@ -1,7 +1,7 @@
 # telystafront/Docakfile
 # 多阶段构建
 # 阶段1：构建环境
-FROM node as builder
+FROM node:18 as builder
 
 WORKDIR /app
 COPY package*.json ./
