@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     # apps
     'apps.telystaauth',
+    'apps.home'
 ]
 
 # REST_FRAMEWORK 配置

@@ -59,6 +59,8 @@ services:
       - ./volumes/telystaback/sock:/data/sock
     networks:
       - telystaweb
+    healthcheck:
+      test: curl -f http://localhost:8000/api/home/health
     depends_on:
       redis:
         condition: service_healthy

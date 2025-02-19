@@ -5,7 +5,8 @@ from django.urls  import include
 
 
 API_APPS = [
-    ('auth','apps.telystaauth.urls')
+    ('auth','apps.telystaauth.urls'),
+    ('home','apps.home.urls')
 ]
 urlpatterns = [
     path('admin/', admin.site.urls),
