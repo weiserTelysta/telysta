@@ -1,17 +1,15 @@
 # telystaback/Dockfile
 # 使用多阶段构建
 # 阶段1：构建环境
-FROM python:3.10 AS builder
+FROM python:3.10 as builder
 
 WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 RUN pip install --upgrade pip -i https://pypi.tuna.tsinghua.edu.cn/simple --timeout=300
-
-
-COPY requirements.txt .
-RUN pip install --user -r requirements.txt --timeout=300 -i https://pypi.tuna.tsinghua.edu.cn/simple
+COPY requirements.txt . 
+RUN pip install -r requirements.txt --timeout=300 -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 # 阶段2：运行环境
 FROM builder
