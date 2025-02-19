@@ -7,7 +7,8 @@ WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-RUN python -m pip install --upgrade pip
+RUN pip install --upgrade pip -i https://pypi.tuna.tsinghua.edu.cn/simple --timeout=300
+
 
 COPY requirements.txt .
 RUN pip install --user -r requirements.txt
