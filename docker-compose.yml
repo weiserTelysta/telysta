@@ -56,7 +56,7 @@ services:
        - DB_USER=${DB_USER}
        - DB_PASSWORD=${DB_PASSWORD}
     volumes:
-      - .volumes/telystaback/sock:/data/sock
+      - ./volumes/telystaback/sock:/data/sock
     networks:
       - telystaweb
     depends_on:
