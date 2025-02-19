@@ -1,6 +1,5 @@
-# telystafront/Docakfile
-# 多阶段构建
-# 阶段1：构建环境
+# telystafront/Dockerfile
+
 FROM node:18 AS builder
 
 COPY . /www/web

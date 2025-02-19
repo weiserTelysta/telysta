@@ -44,10 +44,6 @@ services:
       - "80:80"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost"] 
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
     networks:
       - telystaweb
     depends_on:
@@ -67,7 +63,7 @@ services:
     networks:
       - telystaweb
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/api/home/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/home/health/"]
     depends_on:
       redis:
         condition: service_healthy
