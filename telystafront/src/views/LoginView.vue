@@ -65,7 +65,7 @@ const handleSubmit = async () => {
 
 <style lang="scss" scoped>
 @use 'sass:color';
-@import "@/assets/css/color-system";
+@use "@/assets/css/color-system" as *;
 
 
 .mainbody {

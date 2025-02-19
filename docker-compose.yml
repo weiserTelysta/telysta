@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   db:
-    image: mariadb:10.11
+    image: mysql
     container_name: telysta_db
     environment:
       MYSQL_DATABASE: ${DB_NAME}
@@ -23,7 +23,7 @@ services:
     build: ./telystaback
     container_name: telysta_backend
     env_file:
-      - .env.production  # 加载环境变量文件
+      - .env  # 加载环境变量文件
     depends_on:
       db:
         condition: service_healthy
@@ -43,7 +43,7 @@ services:
     build: ./telystafront
     container_name: telysta_frontend
     env_file:
-      - .env.production  # 加载环境变量文件
+      - .env  # 加载环境变量文件
     ports:
       - "80:80"
     networks:

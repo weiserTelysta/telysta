@@ -1,7 +1,7 @@
 # telystaback/Dockfile
 # 使用多阶段构建
 # 阶段1：构建环境
-FROM python:3.11-slim as builder
+FROM python:3.10 as builder
 
 WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -16,7 +16,7 @@ COPY requirements.txt .
 RUN pip install --user -r requirements.txt
 
 # 阶段2：运行环境
-FROM python:3.11-slim
+FROM builder
 
 WORKDIR /app
 ENV PATH="/app/.local/bin:$PATH"
