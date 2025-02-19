@@ -7,7 +7,7 @@ services:
     container_name:  "redis"
     restart:  always
     healthcheck:
-      test: ["CMD", "redis-cli","--raw","incr","ping"]
+      test: ["CMD", "redis-cli","ping"]
     volumes:
       - ./volumes/redis:/data
     networks:
@@ -18,11 +18,11 @@ services:
     restart: always
     env_file: .env
     environment: 
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_ALLOW_EMPTY_PASSWORD: ${DB_ALLOW_EMPTY_PASSWORD}
-      MYSQL_DB_USER: ${DB_USER}
-      MYSQL_DB_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
       MYSQL_DB_PORT: ${DB_PORT}
       TZ: ${TZ}
     command:
@@ -31,7 +31,7 @@ services:
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
     volumes:
-      - ./volumes/db/data:var/lib/mysql
+      - ./volumes/db/data:/var/lib/mysql
     networks:
       - telsytaweb
     depends_on:
@@ -44,13 +44,18 @@ services:
     ports: 
       - "80:80"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://127.0.0.1"]
+      test: ["CMD", "curl", "-f", "http://localhost"]
     networks:
       - telsytaweb
   telystaback:
     build: ./telystaback
     restart: always
     container_name: "telystaback"
+    environment:
+       - DB_HOST=db
+       - DB_NAME=${DB_NAME}
+       - DB_USER=${DB_USER}
+       - DB_PASSWORD=${DB_PASSWORD}
     volumes:
       - .volumes/telystaback/sock:/data/sock
     networks:
