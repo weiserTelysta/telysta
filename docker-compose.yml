@@ -9,6 +9,7 @@ services:
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    command: --tls-version=TLSv1.2,TLSv1.3 
     volumes:
       - db_data:/var/lib/mysql
     networks:
@@ -32,7 +33,6 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./backend:/app
       - static_volume:/app/staticfiles
     command: >
       sh -c "python manage.py migrate &&
