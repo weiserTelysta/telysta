@@ -58,7 +58,7 @@ services:
     volumes:
       - .volumes/telystaback/sock:/data/sock
     networks:
-      - telsytaweb
+      - telystaweb
     depends_on:
       redis:
         condition: service_healthy
