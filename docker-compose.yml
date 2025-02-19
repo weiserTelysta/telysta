@@ -1,60 +1,65 @@
 version: '3.8'
+name: telsytaweb
 
 services:
-  db:
-    image: mysql
-    container_name: telysta_db
-    environment:
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-    command: --tls-version=TLSv1.2,TLSv1.3 
+  redis:
+    image: "redis"
+    container_name:  "redis"
+    restart:  always
+    healthcheck:
+      test: ["CMD", "redis-cli","--raw","incr","ping"]
     volumes:
-      - db_data:/var/lib/mysql
+      - ./volumes/redis:/data
     networks:
-      - telysta_network
+      - telsytaweb
+  db:
+    image: "mysql"
+    container_name: "db"
+    restart: always
+    env_file: .env
+    environment: 
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ALLOW_EMPTY_PASSWORD: ${DB_ALLOW_EMPTY_PASSWORD}
+      MYSQL_DB_USER: ${DB_USER}
+      MYSQL_DB_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DB_PORT: ${DB_PORT}
+      TZ: ${TZ}
+    command:
+      --character-set-server=UTF8MB4
+      --max_connections=1000
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
-  backend:
-    build: ./telystaback
-    container_name: telysta_backend
-    env_file:
-      - .env  # 加载环境变量文件
+    volumes:
+      - ./volumes/db/data:var/lib/mysql
+    networks:
+      - telsytaweb
     depends_on:
+      redis:
+        condition: service_healthy
+  telystafront:
+    build: ./telystafront
+    container_name: "telystafront"
+    restart: always
+    ports: 
+      - "80:80"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1"]
+    networks:
+      - telsytaweb
+  telystaback:
+    build: ./telystaback
+    restart: always
+    container_name: "telystaback"
+    volumes:
+      - .volumes/telystaback/sock:/data/sock
+    networks:
+      - telsytaweb
+    depends_on:
+      redis:
+        condition: service_healthy
       db:
         condition: service_healthy
-    networks:
-      - telysta_network
-    ports:
-      - "8000:8000"
-    volumes:
-      - static_volume:/app/staticfiles
-    command: >
-      sh -c "python manage.py migrate &&
-             python manage.py collectstatic --noinput &&
-             gunicorn --bind 0.0.0.0:8000 --workers 4 telystaback.wsgi:application"
-
-  frontend:
-    build: ./telystafront
-    container_name: telysta_frontend
-    env_file:
-      - .env  # 加载环境变量文件
-    ports:
-      - "80:80"
-    networks:
-      - telysta_network
-    depends_on:
-      - backend
-
-volumes:
-  db_data:
-  static_volume:
-
 networks:
-  telysta_network:
-    driver: bridge
+  telsytaweb:
+    driver: "bridge"
