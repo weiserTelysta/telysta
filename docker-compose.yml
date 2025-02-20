@@ -55,6 +55,7 @@ services:
     build: ./telystaback
     restart: always
     container_name: "telystaback"
+    env_file: .env
     environment:
        - DB_HOST=db
        - DB_NAME=${DB_NAME}
