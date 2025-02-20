@@ -62,6 +62,8 @@ services:
       - ./volumes/telystaback/sock:/data/sock
     networks:
       - telystaweb
+    ports:
+      - "8000:8000"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/api/home/health/"]
     depends_on:
