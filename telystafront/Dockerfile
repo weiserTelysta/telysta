@@ -1,19 +1,13 @@
-# telystafront/Dockerfile
+FROM nginx  
 
-FROM node:18 AS builder
+COPY . /www/
 
-COPY . /www/web
-WORKDIR /www/web
+RUN mkdir -p /data/sock
 
+WORKDIR /www
 
-COPY package*.json ./
-RUN npm ci
-COPY . .
-
-
-FROM nginx
-COPY ./dist /usr/share/nginx/html
-COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+RUN cp /www/nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
+
 CMD ["nginx", "-g", "daemon off;"]
