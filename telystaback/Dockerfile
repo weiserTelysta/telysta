@@ -11,7 +11,7 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt --timeout=300 -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 RUN mkdir -p /data/log
-RUN mdkir -p /data/sock
+RUN mkdir -p /data/sock
 
 # 运行参数
 EXPOSE 8000
