@@ -77,7 +77,8 @@ MIDDLEWARE = [
 ]
 
 # 跨域配置
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOWED_ORIGINS = ["https://telysta.com","https://www.telysta.com","https://localhost","https://120.76.217.45"]
 
 # JWT配置
 SIMPLE_JWT = {
