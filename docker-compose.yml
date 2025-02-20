@@ -28,7 +28,7 @@ services:
       --character-set-server=UTF8MB4
       --max_connections=1000
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost","-uroot","-p$$MYSQL_ROOT_PASSWORD"]
     volumes:
       - ./volumes/db/data:/var/lib/mysql
     networks:
@@ -44,6 +44,8 @@ services:
       - "80:80"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost"] 
+    volumes:
+      - ./volumes/sock:/data/sock
     networks:
       - telystaweb
     depends_on:
@@ -60,6 +62,7 @@ services:
        - DB_PASSWORD=${DB_PASSWORD}
     volumes:
       - ./volumes/telystaback/sock:/data/sock
+      - ./volumes/telystafront/log:/data/log
     networks:
       - telystaweb
     ports:
